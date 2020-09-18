@@ -23,7 +23,12 @@ const getUserWithEmail = function(email) {
     WHERE LOWER(users.email) = $1;
   `, [email.toLowerCase()])
 
-    .then(res => res.rows.length !== 0 ? res.rows[0] : null)
+    .then(res => {
+      if (res.rows.length !== 0) {
+        return res.rows[0];
+      }
+      return null;
+    })
     .catch(err => err.message);
  
 };
@@ -41,7 +46,7 @@ const getUserWithId = function(id) {
     WHERE users.id = $1;
   `, [id])
   
-    .then(res => res.rows[0])//.length !== 0 ? res.rows[0] : null)
+    .then(res => res.rows[0].length !== 0 ? res.rows[0] : null)
     .catch(err => err.message);
   
 };
@@ -58,18 +63,14 @@ const addUser =  function(user) {
   return pool.query(`
     INSERT INTO users (name, email, password)
     VALUES ($1, $2, $3)
-    ON CONFLICT (users.name)
-    DO NOTHING
     RETURNING *;
   `, [user.name, user.email, user.password])
-
     .then(res => {
-      console.log('res.rows is ' + res.rows);
-      //if(res.rows[0].name && res.rows[0].email && res.rows[0].password) {
-        return res.row[0];
-      //}
-      return null })
-
+      if (res.rows[0].name && res.rows[0].email && res.rows[0].password) {
+        return res.rows[0];
+      }
+      return null;
+    })
     .catch(err => err.message);
 };
 exports.addUser = addUser;

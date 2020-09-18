@@ -15,7 +15,7 @@ app.use(cookieSession({
   keys: ['key1']
 }));
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // /api/endpoints

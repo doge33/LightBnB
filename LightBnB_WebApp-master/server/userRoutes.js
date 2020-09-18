@@ -4,18 +4,20 @@ module.exports = function(router, database) {
 
   // Create a new user
   router.post('/', (req, res) => {
+    
     const user = req.body;
     user.password = bcrypt.hashSync(user.password, 12);
+
     database.addUser(user)
-    .then(user => {
-      if (!user) {
-        res.send({error: "error"});
-        return;
-      }
-      req.session.userId = user.id;
-      res.send("🤗");
-    })
-    .catch(e => res.send(e));
+      .then(user => {
+        if (!user) {
+          res.send({error: "error"});
+          return;
+        }
+        req.session.userId = user.id;
+        res.send("🤗");
+      })
+      .catch(e => res.send(e));
   });
 
   /**
@@ -25,13 +27,13 @@ module.exports = function(router, database) {
    */
   const login =  function(email, password) {
     return database.getUserWithEmail(email)
-    .then(user => {
-      if (bcrypt.compareSync(password, user.password)) {
-        return user;
-      }
-      return null;
-    });
-  }
+      .then(user => {
+        if (bcrypt.compareSync(password, user.password)) {
+          return user;
+        }
+        return null;
+      });
+  };
   exports.login = login;
 
   router.post('/login', (req, res) => {
@@ -55,6 +57,7 @@ module.exports = function(router, database) {
 
   router.get("/me", (req, res) => {
     const userId = req.session.userId;
+
     if (!userId) {
       res.send({message: "not logged in"});
       return;
@@ -73,4 +76,4 @@ module.exports = function(router, database) {
   });
 
   return router;
-}
+};
