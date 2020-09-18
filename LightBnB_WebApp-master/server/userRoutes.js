@@ -59,7 +59,6 @@ module.exports = function(router, database) {
       res.send({message: "not logged in"});
       return;
     }
-    //console.log('userId is:  ' + userId); //sally hansen userId logs 1
 
     database.getUserWithId(userId)
       .then(user => {

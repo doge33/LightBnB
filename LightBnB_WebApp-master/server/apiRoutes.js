@@ -1,8 +1,9 @@
 module.exports = function(router, database) {
 
   router.get('/properties', (req, res) => {
-    database.getAllProperties(req.query, 20)
-    .then(properties => res.send({properties}))
+    database.getAllProperties(req.query)
+    .then(properties => {
+      res.send({properties})})
     .catch(e => {
       console.error(e);
       res.send(e)
@@ -30,8 +31,7 @@ module.exports = function(router, database) {
         res.send(property);
       })
       .catch(e => {
-        console.error(e);
-        res.send(e)
+        res.send(e);
       });
   });
 
